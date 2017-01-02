@@ -173,9 +173,9 @@ namespace SubRenamer
                         subList.Add(file);
                         break;
                 }
-                AddMovie(movieList);
-                AddSub(subList);
             }
+            if (movieList.Count > 0) AddMovie(movieList);
+            if (subList.Count > 0) AddSub(subList);
         }
     }
 }
