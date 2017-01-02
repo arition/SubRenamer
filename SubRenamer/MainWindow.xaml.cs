@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,67 @@ namespace SubRenamer
         public ObservableCollection<Model> ModelList { get; } = new ObservableCollection<Model>();
         public bool CopySub { get; set; }
 
+        public void AddMovie(IEnumerable<string> files)
+        {
+            var fileList = files.OrderBy(t => t);
+            var i = 0;
+            foreach (var selectFileFileName in fileList)
+            {
+                if (i == ModelList.Count)
+                {
+                    ModelList.Add(new Model
+                    {
+                        MovieFile = new FileInfo(selectFileFileName)
+                    });
+                }
+                else
+                {
+                    ModelList[i].MovieFile = new FileInfo(selectFileFileName);
+                }
+                i++;
+            }
+        }
+
+        public void AddSub(IEnumerable<string> files)
+        {
+            var fileList = files.Select(t => new
+            {
+                file = new FileInfo(t),
+                name = new FileInfo(t).Name
+            }).Select(t => new
+            {
+                t.file,
+                t.name,
+                nameOnly = t.name.Substring(0, t.name.IndexOf(".", StringComparison.Ordinal))
+            }).OrderBy(t => t.nameOnly).ToList();
+
+            var i = -1;
+            var lastSubNameOnly = "";
+
+            foreach (var selectFileFileName in fileList)
+            {
+                if (lastSubNameOnly != selectFileFileName.nameOnly)
+                {
+                    i++;
+                    if (i < ModelList.Count)
+                    {
+                        ModelList[i].SubFiles.Clear();
+                    }
+                }
+                if (i == ModelList.Count)
+                {
+                    var model = new Model();
+                    model.SubFiles.Add(selectFileFileName.file);
+                    ModelList.Add(model);
+                }
+                else
+                {
+                    ModelList[i].SubFiles.Add(selectFileFileName.file);
+                }
+                lastSubNameOnly = selectFileFileName.nameOnly;
+            }
+        }
+
         public MainWindow()
         {
             DataContext = this;
@@ -32,23 +94,7 @@ namespace SubRenamer
             };
             if (selectFile.ShowDialog() == true)
             {
-                var fileList = selectFile.FileNames.OrderBy(t => t);
-                var i = 0;
-                foreach (var selectFileFileName in fileList)
-                {
-                    if (i == ModelList.Count)
-                    {
-                        ModelList.Add(new Model
-                        {
-                            MovieFile = new FileInfo(selectFileFileName)
-                        });
-                    }
-                    else
-                    {
-                        ModelList[i].MovieFile = new FileInfo(selectFileFileName);
-                    }
-                    i++;
-                }
+                AddMovie(selectFile.FileNames);
             }
         }
 
@@ -61,42 +107,7 @@ namespace SubRenamer
             };
             if (selectFile.ShowDialog() == true)
             {
-                var fileList = selectFile.FileNames.Select(t => new
-                {
-                    file = new FileInfo(t),
-                    name = new FileInfo(t).Name
-                }).Select(t => new
-                {
-                    t.file,
-                    t.name,
-                    nameOnly = t.name.Substring(0, t.name.IndexOf(".", StringComparison.Ordinal))
-                }).OrderBy(t=>t.nameOnly).ToList();
-
-                var i = -1;
-                var lastSubNameOnly = "";
-                
-                foreach (var selectFileFileName in fileList)
-                {
-                    if (lastSubNameOnly != selectFileFileName.nameOnly)
-                    {
-                        i++;
-                        if (i < ModelList.Count)
-                        {
-                            ModelList[i].SubFiles.Clear();
-                        }
-                    }
-                    if (i == ModelList.Count)
-                    {
-                        var model = new Model();
-                        model.SubFiles.Add(selectFileFileName.file);
-                        ModelList.Add(model);
-                    }
-                    else
-                    {
-                        ModelList[i].SubFiles.Add(selectFileFileName.file); 
-                    }
-                    lastSubNameOnly = selectFileFileName.nameOnly;
-                }
+                AddSub(selectFile.FileNames);
             }
         }
 
@@ -135,6 +146,32 @@ namespace SubRenamer
         private void BtnClearList_OnClick(object sender, RoutedEventArgs e)
         {
             ModelList.Clear();
+        }
+
+        private void ListInfo_OnDrop(object sender, DragEventArgs e)
+        {
+            var movieList = new List<string>();
+            var subList = new List<string>();
+            var files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files == null) return;
+            foreach (var file in files)
+            {
+                var extension = new FileInfo(file).Extension;
+                switch (extension)
+                {
+                    case ".mp4":
+                    case ".mkv":
+                        movieList.Add(file);
+                        break;
+                    case ".ass":
+                    case ".ssa":
+                    case ".srt":
+                        subList.Add(file);
+                        break;
+                }
+                AddMovie(movieList);
+                AddSub(subList);
+            }
         }
     }
 }

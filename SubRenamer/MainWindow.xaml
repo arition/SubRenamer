@@ -28,7 +28,7 @@
                 <Button x:Name="BtnClearList" Content="清空列表" Width="100" Margin="10,0" Click="BtnClearList_OnClick"/>
             </WrapPanel>
         </StackPanel>
-        <ListView x:Name="ListInfo" ItemsSource="{Binding ModelList}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Visible">
+        <ListView x:Name="ListInfo" ItemsSource="{Binding ModelList}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Visible" AllowDrop="True" Drop="ListInfo_OnDrop">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="视频文件名" Width="220" DisplayMemberBinding="{Binding MovieFileName}"/>
