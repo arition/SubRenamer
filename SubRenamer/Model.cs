@@ -32,7 +32,7 @@ namespace SubRenamer
         public ObservableCollection<FileInfo> SubFiles { get; set; } = new ObservableCollection<FileInfo>();
         public string SubFileName => string.Join(Environment.NewLine, SubFiles.Select(t => t.Name));
         public ObservableCollection<FileInfo> RenamedSubFiles { get; set; } = new ObservableCollection<FileInfo>();
-        public string RenamedSubFileName => string.Join(Environment.NewLine, RenamedSubFiles.Select(t=>t.Name));
+        public string RenamedSubFileName => string.Join(Environment.NewLine, RenamedSubFiles.Select(t => t.Name));
 
         public event PropertyChangedEventHandler PropertyChanged;
 
