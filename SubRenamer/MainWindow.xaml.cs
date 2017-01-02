@@ -37,6 +37,7 @@ namespace SubRenamer
                 }
                 i++;
             }
+            while (i < ModelList.Count) ModelList.RemoveAt(i);
         }
 
         public void AddSub(IEnumerable<string> files)
@@ -78,6 +79,8 @@ namespace SubRenamer
                 }
                 lastSubNameOnly = selectFileFileName.nameOnly;
             }
+            i++;
+            while (i < ModelList.Count) ModelList.RemoveAt(i);
         }
 
         public MainWindow()
