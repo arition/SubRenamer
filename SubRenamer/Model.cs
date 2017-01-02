@@ -61,7 +61,9 @@ namespace SubRenamer
             var fileName = MovieFileName.Substring(0, MovieFileName.LastIndexOf(".", StringComparison.Ordinal));
             foreach (var subFileInfo in SubFiles)
             {
-                var extension = subFileInfo.Name.Substring(subFileInfo.Name.IndexOf(".", StringComparison.Ordinal));
+                var extension = subFileInfo.Name.Substring(
+                    subFileInfo.Name.Substring(subFileInfo.Name.Length - 15).IndexOf(".", StringComparison.Ordinal) +
+                    (subFileInfo.Name.Length - 15));
                 if (copyToMovieLocation)
                 {
                     if (MovieFile.Directory != null)

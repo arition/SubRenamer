@@ -49,7 +49,8 @@ namespace SubRenamer
             {
                 t.file,
                 t.name,
-                nameOnly = t.name.Substring(0, t.name.IndexOf(".", StringComparison.Ordinal))
+                nameOnly = t.name.Substring(0,
+                    t.name.Substring(t.name.Length - 15).IndexOf(".", StringComparison.Ordinal) + (t.name.Length - 15))
             }).OrderBy(t => t.nameOnly).ToList();
 
             var i = -1;
