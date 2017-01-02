@@ -1,12 +1,45 @@
-﻿<Window x:Class="SubRenamer.MainWindow"
+﻿<controls:MetroWindow x:Class="SubRenamer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SubRenamer"
+        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
-</Window>
+        BorderBrush="{DynamicResource AccentColorBrush}"
+        BorderThickness="1"
+        WindowStartupLocation="CenterScreen"
+        Title="SubRenamer" Height="450" Width="725">
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Bottom">
+            <WrapPanel Margin="0,5" HorizontalAlignment="Left">
+                <CheckBox Content="复制字幕到视频目录" Margin="10,0" IsChecked="{Binding CopySub, Mode=TwoWay}"/>
+            </WrapPanel>
+            <WrapPanel Margin="0,5" HorizontalAlignment="Left">
+                <WrapPanel.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </WrapPanel.Resources>
+                <Button x:Name="BtnSelectMovie" Content="选择视频" Width="100" Margin="10,0" Click="BtnSelectMovie_OnClick"/>
+                <Button x:Name="BtnSelectSub" Content="选择字幕" Width="100" Margin="10,0" Click="BtnSelectSub_OnClick"/>
+                <Button x:Name="BtnRename" Content="执行重命名" Width="100" Margin="10,0" Click="BtnRename_OnClick"/>
+                <Button x:Name="BtnClearList" Content="清空列表" Width="100" Margin="10,0" Click="BtnClearList_OnClick"/>
+            </WrapPanel>
+        </StackPanel>
+        <ListView x:Name="ListInfo" ItemsSource="{Binding ModelList}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Visible">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="视频文件名" Width="220" DisplayMemberBinding="{Binding MovieFileName}"/>
+                    <GridViewColumn Header="字幕文件名" Width="220" DisplayMemberBinding="{Binding SubFileName}"/>
+                    <GridViewColumn Header="最终文件名" Width="220" DisplayMemberBinding="{Binding RenamedSubFileName}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+    <controls:MetroWindow.WindowButtonCommands>
+        <controls:WindowButtonCommands Style="{DynamicResource MahApps.Metro.Styles.WindowButtonCommands.Win10}" />
+    </controls:MetroWindow.WindowButtonCommands>
+</controls:MetroWindow>
