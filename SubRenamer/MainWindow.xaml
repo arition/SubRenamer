@@ -10,10 +10,14 @@
         BorderThickness="1"
         WindowStartupLocation="CenterScreen"
         Title="SubRenamer" Height="450" Width="725">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Bottom">
             <WrapPanel Margin="0,5" HorizontalAlignment="Left">
                 <CheckBox Content="复制字幕到视频目录" Margin="10,0" IsChecked="{Binding CopySub, Mode=TwoWay}"/>
+                <CheckBox Content="使用sushi自动调轴" Margin="10,0" IsChecked="{Binding EatSushi, Mode=TwoWay}"/>
             </WrapPanel>
             <WrapPanel Margin="0,5" HorizontalAlignment="Left">
                 <WrapPanel.Resources>
@@ -23,6 +27,7 @@
                         </ResourceDictionary.MergedDictionaries>
                     </ResourceDictionary>
                 </WrapPanel.Resources>
+                <Button x:Name="BtnSelectOriginalMovie" Content="选择原视频" Width="100" Margin="10,0" Click="BtnSelectOriginalMovie_OnClick" Visibility="{Binding Path=EatSushi, Converter={StaticResource BoolToVis}, Mode=TwoWay}"/>
                 <Button x:Name="BtnSelectMovie" Content="选择视频" Width="100" Margin="10,0" Click="BtnSelectMovie_OnClick"/>
                 <Button x:Name="BtnSelectSub" Content="选择字幕" Width="100" Margin="10,0" Click="BtnSelectSub_OnClick"/>
                 <Button x:Name="BtnRename" Content="执行重命名" Width="100" Margin="10,0" Click="BtnRename_OnClick"/>
@@ -31,7 +36,8 @@
         </StackPanel>
         <ListView x:Name="ListInfo" ItemsSource="{Binding ModelList}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Visible" AllowDrop="True" Drop="ListInfo_OnDrop">
             <ListView.View>
-                <GridView>
+                <GridView x:Name="GridView">
+                    <GridViewColumn Header="原视频文件名" Width="220" DisplayMemberBinding="{Binding OriginalMovieFileName}"/>
                     <GridViewColumn Header="视频文件名" Width="220" DisplayMemberBinding="{Binding MovieFileName}"/>
                     <GridViewColumn Header="字幕文件名" Width="220" DisplayMemberBinding="{Binding SubFileName}"/>
                     <GridViewColumn Header="最终文件名" Width="220" DisplayMemberBinding="{Binding RenamedSubFileName}"/>

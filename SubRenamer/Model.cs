@@ -28,8 +28,20 @@ namespace SubRenamer
                 }
             }
         }
+        private FileInfo _originalMovieFile;
+
+        public FileInfo OriginalMovieFile
+        {
+            get { return _originalMovieFile; }
+            set
+            {
+                _originalMovieFile = value;
+                OnPropertyChanged("OriginalMovieFileName");
+            }
+        }
 
         public string MovieFileName => MovieFile?.Name;
+        public string OriginalMovieFileName => OriginalMovieFile?.Name;
         public ObservableCollection<FileInfo> SubFiles { get; set; } = new ObservableCollection<FileInfo>();
         public string SubFileName => string.Join(Environment.NewLine, SubFiles.Select(t => t.Name));
         public ObservableCollection<FileInfo> RenamedSubFiles { get; set; } = new ObservableCollection<FileInfo>();
