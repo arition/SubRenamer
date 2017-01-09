@@ -231,8 +231,8 @@ namespace SubRenamer
                             };
                             process.Start();
                             await Task.Run(() => process.WaitForExit());
+                            if (!CopySub) model.SubFiles[j].Delete();
                         }
-                        if (!CopySub) model.SubFiles[j].Delete();
                     }
                 }
                 catch (Exception ex)
