@@ -13,7 +13,7 @@ namespace SubRenamer
 
         public FileInfo MovieFile
         {
-            get { return _movieFile; }
+            get => _movieFile;
             set
             {
                 _movieFile = value;
@@ -32,7 +32,7 @@ namespace SubRenamer
 
         public FileInfo OriginalMovieFile
         {
-            get { return _originalMovieFile; }
+            get => _originalMovieFile;
             set
             {
                 _originalMovieFile = value;
@@ -81,8 +81,9 @@ namespace SubRenamer
             var subFileInfo = SubFiles[index];
             var fileName = MovieFileName.Substring(0, MovieFileName.LastIndexOf(".", StringComparison.Ordinal));
             var extension = subFileInfo.Name.Substring(
-                    subFileInfo.Name.Substring(subFileInfo.Name.Length - 15).IndexOf(".", StringComparison.Ordinal) +
-                    (subFileInfo.Name.Length - 15));
+                subFileInfo.Name.Substring(subFileInfo.Name.Length - 15 >= 0 ? subFileInfo.Name.Length - 15 : 0)
+                    .IndexOf(".", StringComparison.Ordinal) +
+                (subFileInfo.Name.Length - 15 >= 0 ? subFileInfo.Name.Length - 15 : 0));
             if (copyToMovieLocation)
             {
                 if (MovieFile.Directory != null)

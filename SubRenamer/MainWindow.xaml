@@ -9,7 +9,7 @@
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
         WindowStartupLocation="CenterScreen"
-        Title="SubRenamer" Height="450" Width="725">
+        Title="SubRenamer" Height="450" Width="725" FontFamily="{DynamicResource DefaultFont}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
@@ -34,7 +34,7 @@
                 <Button x:Name="BtnClearList" Content="清空列表" Width="100" Margin="10,0" Click="BtnClearList_OnClick"/>
             </WrapPanel>
         </StackPanel>
-        <ListView x:Name="ListInfo" ItemsSource="{Binding ModelList}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Visible" AllowDrop="True" Drop="ListInfo_OnDrop">
+        <ListView x:Name="ListInfo" ItemsSource="{Binding Path=ModelList.Models}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Visible" AllowDrop="True" Drop="ListInfo_OnDrop">
             <ListView.View>
                 <GridView x:Name="GridView">
                     <GridViewColumn Header="原视频文件名" Width="220" DisplayMemberBinding="{Binding OriginalMovieFileName}"/>
@@ -50,7 +50,7 @@
     </controls:MetroWindow.WindowButtonCommands>
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
-            <iconPacks:PackIconMaterial Kind="RenameBox" />
+            <iconPacks:PackIconMaterial Kind="RenameBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </controls:WindowCommands>
     </controls:MetroWindow.LeftWindowCommands>
 </controls:MetroWindow>

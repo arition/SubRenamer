@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using SubRenamer.Annotations;
@@ -22,15 +19,14 @@ namespace SubRenamer
     /// </summary>
     public partial class MainWindow : INotifyPropertyChanged
     {
-        public ObservableCollection<Model> ModelList { get; } = new ObservableCollection<Model>();
         private GridViewColumn Column { get; }
-
+        public ModelList ModelList { get; } = new ModelList();
         private bool _eatSushi;
         private bool _copySub;
 
         public bool CopySub
         {
-            get { return _copySub; }
+            get => _copySub;
             set
             {
                 _copySub = value;
@@ -40,7 +36,7 @@ namespace SubRenamer
 
         public bool EatSushi
         {
-            get { return _eatSushi; }
+            get => _eatSushi;
             set
             {
                 _eatSushi = value;
@@ -54,93 +50,6 @@ namespace SubRenamer
                 }
                 OnPropertyChanged();
             }
-        }
-
-        public void AddOriginalMovie(IEnumerable<string> files)
-        {
-            var fileList = files.OrderBy(t => t);
-            var i = 0;
-            foreach (var selectFileFileName in fileList)
-            {
-                if (i == ModelList.Count)
-                {
-                    ModelList.Add(new Model
-                    {
-                        OriginalMovieFile = new FileInfo(selectFileFileName)
-                    });
-                }
-                else
-                {
-                    ModelList[i].OriginalMovieFile = new FileInfo(selectFileFileName);
-                }
-                i++;
-            }
-            while (i < ModelList.Count) ModelList.RemoveAt(i);
-        }
-
-        public void AddMovie(IEnumerable<string> files)
-        {
-            var fileList = files.OrderBy(t => t);
-            var i = 0;
-            foreach (var selectFileFileName in fileList)
-            {
-                if (i == ModelList.Count)
-                {
-                    ModelList.Add(new Model
-                    {
-                        MovieFile = new FileInfo(selectFileFileName)
-                    });
-                }
-                else
-                {
-                    ModelList[i].MovieFile = new FileInfo(selectFileFileName);
-                }
-                i++;
-            }
-            while (i < ModelList.Count) ModelList.RemoveAt(i);
-        }
-
-        public void AddSub(IEnumerable<string> files)
-        {
-            var fileList = files.Select(t => new
-            {
-                file = new FileInfo(t),
-                name = new FileInfo(t).Name
-            }).Select(t => new
-            {
-                t.file,
-                t.name,
-                nameOnly = t.name.Substring(0,
-                    t.name.Substring(t.name.Length - 15).IndexOf(".", StringComparison.Ordinal) + (t.name.Length - 15))
-            }).OrderBy(t => t.nameOnly).ToList();
-
-            var i = -1;
-            var lastSubNameOnly = "";
-
-            foreach (var selectFileFileName in fileList)
-            {
-                if (lastSubNameOnly != selectFileFileName.nameOnly)
-                {
-                    i++;
-                    if (i < ModelList.Count)
-                    {
-                        ModelList[i].SubFiles.Clear();
-                    }
-                }
-                if (i == ModelList.Count)
-                {
-                    var model = new Model();
-                    model.SubFiles.Add(selectFileFileName.file);
-                    ModelList.Add(model);
-                }
-                else
-                {
-                    ModelList[i].SubFiles.Add(selectFileFileName.file);
-                }
-                lastSubNameOnly = selectFileFileName.nameOnly;
-            }
-            i++;
-            while (i < ModelList.Count) ModelList.RemoveAt(i);
         }
 
         public MainWindow()
@@ -160,7 +69,7 @@ namespace SubRenamer
             };
             if (selectFile.ShowDialog() == true)
             {
-                AddOriginalMovie(selectFile.FileNames);
+                ModelList.AddOriginalMovie(selectFile.FileNames);
             }
         }
 
@@ -173,7 +82,7 @@ namespace SubRenamer
             };
             if (selectFile.ShowDialog() == true)
             {
-                AddMovie(selectFile.FileNames);
+                ModelList.AddMovie(selectFile.FileNames);
             }
         }
 
@@ -186,7 +95,7 @@ namespace SubRenamer
             };
             if (selectFile.ShowDialog() == true)
             {
-                AddSub(selectFile.FileNames);
+                ModelList.AddSub(selectFile.FileNames);
             }
         }
 
@@ -200,10 +109,10 @@ namespace SubRenamer
                 controller.Maximum = 1;
             }
             var sb = new StringBuilder();
-            for (var i = 0; i < ModelList.Count; i++)
+            for (var i = 0; i < ModelList.Models.Count; i++)
             {
                 if (EatSushi) controller?.SetMessage($"正在处理第{i + 1}个字幕");
-                var model = ModelList[i];
+                var model = ModelList.Models[i];
                 try
                 {
                     model.GenerateRenameSubFiles(CopySub);
@@ -239,7 +148,7 @@ namespace SubRenamer
                 {
                     sb.AppendLine($"第{i + 1}个字幕出现错误：{ex.Message}");
                 }
-                if (EatSushi) controller?.SetProgress((i + 1d)/ModelList.Count);
+                if (EatSushi) controller?.SetProgress((i + 1d)/ModelList.Models.Count);
             }
             if (EatSushi && controller != null) await controller.CloseAsync();
             var message = sb.ToString();
@@ -251,66 +160,19 @@ namespace SubRenamer
             {
                 await this.ShowMessageAsync("错误", message);
             }
-            ModelList.Clear();
+            ModelList.Models.Clear();
         }
 
         private void BtnClearList_OnClick(object sender, RoutedEventArgs e)
         {
-            ModelList.Clear();
+            ModelList.Models.Clear();
         }
 
         private void ListInfo_OnDrop(object sender, DragEventArgs e)
         {
-            var originalMovieList = new List<string>();
-            var movieList = new List<string>();
-            var subList = new List<string>();
             var files = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (files == null) return;
-            foreach (var file in files)
-            {
-                var extension = new FileInfo(file).Extension;
-                switch (extension)
-                {
-                    case ".mp4":
-                    case ".mkv":
-                        if (!EatSushi || movieList.Count == 0)
-                        {
-                            movieList.Add(file);
-                        }
-                        else if (Utils.TestSimilarity(new FileInfo(movieList[0]).Name, new FileInfo(file).Name) > 30)
-                        {
-                            movieList.Add(file);
-                        }
-                        else
-                        {
-                            originalMovieList.Add(file);
-                        }
-                        break;
-                    case ".ass":
-                    case ".ssa":
-                    case ".srt":
-                        subList.Add(file);
-                        break;
-                }
-            }
-            if (subList.Count > 0) AddSub(subList);
-            if (EatSushi)
-            {
-                if (ModelList.Count > 0 && !string.IsNullOrWhiteSpace(ModelList[0].SubFileName))
-                {
-                    if (movieList.Count > 0)
-                    {
-                        if (Utils.TestSimilarity(ModelList[0].SubFiles[0].Name, new FileInfo(movieList[0]).Name) > 30)
-                        {
-                            var tempList = movieList;
-                            movieList = originalMovieList;
-                            originalMovieList = tempList;
-                        }
-                    }
-                }
-            }
-            if (originalMovieList.Count > 0) AddOriginalMovie(originalMovieList);
-            if (movieList.Count > 0) AddMovie(movieList);
+            ModelList.AddDropFiles(files, EatSushi);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
