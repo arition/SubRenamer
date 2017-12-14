@@ -10,6 +10,8 @@ namespace SubRenamer
     {
         public static int TestSimilarity(string texta, string textb)
         {
+            texta = texta.ToLower();
+            textb = textb.ToLower();
             if (texta.Length > textb.Length)
             {
                 var temp = texta;

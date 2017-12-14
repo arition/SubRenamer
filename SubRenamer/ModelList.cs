@@ -105,7 +105,7 @@ namespace SubRenamer
             var subList = new List<string>();
             foreach (var file in files)
             {
-                var extension = new FileInfo(file).Extension;
+                var extension = new FileInfo(file).Extension.ToLower();
                 switch (extension)
                 {
                     case ".mp4":

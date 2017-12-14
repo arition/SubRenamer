@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using SubRenamer.Annotations;
@@ -170,9 +169,8 @@ namespace SubRenamer
 
         private void ListInfo_OnDrop(object sender, DragEventArgs e)
         {
-            var files = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (files == null) return;
-            ModelList.AddDropFiles(files, EatSushi);
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
+                ModelList.AddDropFiles(files, EatSushi);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
