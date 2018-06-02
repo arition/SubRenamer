@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
+using NLog;
 using SubRenamer.Annotations;
 
 namespace SubRenamer
@@ -22,6 +23,8 @@ namespace SubRenamer
         public ModelList ModelList { get; } = new ModelList();
         private bool _eatSushi;
         private bool _copySub;
+        private Logger Logger { get; } = LogManager.GetCurrentClassLogger();
+        private Logger SushiLogger { get; } = LogManager.GetLogger("Sushi");
 
         public bool CopySub
         {
@@ -111,6 +114,7 @@ namespace SubRenamer
             for (var i = 0; i < ModelList.Models.Count; i++)
             {
                 if (EatSushi) controller?.SetMessage($"正在处理第{i + 1}个字幕");
+                Logger.Info($"正在处理第{i + 1}个字幕");
                 var model = ModelList.Models[i];
                 try
                 {
@@ -134,9 +138,13 @@ namespace SubRenamer
                                                 $"--script \"{model.SubFiles[j].FullName}\" " +
                                                 $"-o \"{model.RenamedSubFiles[j].FullName}\"",
                                     UseShellExecute = false,
-                                    CreateNoWindow = true
+                                    CreateNoWindow = true,
+                                    //RedirectStandardOutput = true,
+                                    //RedirectStandardError = true
                                 }
                             };
+                            //process.OutputDataReceived += (senderx, ex) => SushiLogger.Info(ex.Data);
+                            //process.ErrorDataReceived += (senderx, ex) => SushiLogger.Info(ex.Data);
                             process.Start();
                             await Task.Run(() => process.WaitForExit());
                             if (!CopySub) model.SubFiles[j].Delete();
@@ -146,10 +154,12 @@ namespace SubRenamer
                 catch (Exception ex)
                 {
                     sb.AppendLine($"第{i + 1}个字幕出现错误：{ex.Message}");
+                    Logger.Error(ex, $"第{i + 1}个字幕出现错误");
                 }
                 if (EatSushi) controller?.SetProgress((i + 1d)/ModelList.Models.Count);
             }
             if (EatSushi && controller != null) await controller.CloseAsync();
+            Logger.Info("重命名完成");
             var message = sb.ToString();
             if (string.IsNullOrWhiteSpace(message))
             {
