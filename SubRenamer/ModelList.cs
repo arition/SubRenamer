@@ -110,6 +110,7 @@ namespace SubRenamer
                 {
                     case ".mp4":
                     case ".mkv":
+                    case ".m2ts":
                         if (!eatSushi || movieList.Count == 0)
                         {
                             movieList.Add(file);
