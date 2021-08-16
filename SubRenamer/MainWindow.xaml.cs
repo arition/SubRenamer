@@ -139,12 +139,12 @@ namespace SubRenamer
                                                 $"-o \"{model.RenamedSubFiles[j].FullName}\"",
                                     UseShellExecute = false,
                                     CreateNoWindow = true,
-                                    //RedirectStandardOutput = true,
-                                    //RedirectStandardError = true
+                                    RedirectStandardOutput = true,
+                                    RedirectStandardError = true
                                 }
                             };
-                            //process.OutputDataReceived += (senderx, ex) => SushiLogger.Info(ex.Data);
-                            //process.ErrorDataReceived += (senderx, ex) => SushiLogger.Info(ex.Data);
+                            process.OutputDataReceived += (senderx, ex) => SushiLogger.Info(ex.Data);
+                            process.ErrorDataReceived += (senderx, ex) => SushiLogger.Info(ex.Data);
                             process.Start();
                             await Task.Run(() => process.WaitForExit());
                             if (!CopySub) model.SubFiles[j].Delete();
