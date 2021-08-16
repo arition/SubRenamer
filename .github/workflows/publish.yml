@@ -1,0 +1,43 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+      
+jobs:
+  build:
+    runs-on: windows-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+
+    steps:
+    - uses: actions/checkout@v2.3.4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1.8.0
+      with:
+        dotnet-version: 5.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build
+      
+    - name: Publish
+      run: dotnet publish -c Release
+      working-directory: ./SubRenamer
+      
+    - name: Zip Build Artifact
+      uses: vimtor/action-zip@v1
+      with:
+        files: ./SubRenamer/bin/Release/net5.0-windows/publish
+        dest: SubRenamer.zip
+      
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          SubRenamer.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
