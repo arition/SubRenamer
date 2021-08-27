@@ -25,19 +25,30 @@ jobs:
       run: dotnet build
       
     - name: Publish
-      run: dotnet publish -c Release
+      run: dotnet publish -r win-x64 -p:PublishSingleFile=true -c Release --self-contained false
+      working-directory: ./SubRenamer
+      
+    - name: Publish
+      run: dotnet publish -r win-arm64 -p:PublishSingleFile=true -c Release --self-contained false
       working-directory: ./SubRenamer
       
     - name: Zip Build Artifact
       uses: vimtor/action-zip@v1
       with:
-        files: ./SubRenamer/bin/Release/net5.0-windows/publish
-        dest: SubRenamer.zip
+        files: ./SubRenamer/bin/Release/net5.0-windows/win-x64/publish
+        dest: SubRenamer-win-x64.zip
+      
+    - name: Zip Build Artifact
+      uses: vimtor/action-zip@v1
+      with:
+        files: ./SubRenamer/bin/Release/net5.0-windows/win-arm64/publish
+        dest: SubRenamer-win-arm64.zip
       
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          SubRenamer.zip
+          SubRenamer-win-x64.zip
+          SubRenamer-win-arm64.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
