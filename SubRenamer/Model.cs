@@ -76,14 +76,25 @@ namespace SubRenamer
             RenamedSubFiles.CollectionChanged += (e, o) => OnPropertyChanged("RenamedSubFileName");
         }
 
-        public virtual void GenerateRenameSubFiles(int index, bool copyToMovieLocation = false)
+        public virtual void GenerateRenameSubFiles(int index, bool copyToMovieLocation = false, string subtitleFileExtension = null)
         {
             var subFileInfo = SubFiles[index];
             var fileName = MovieFileName.Substring(0, MovieFileName.LastIndexOf(".", StringComparison.Ordinal));
-            var extension = subFileInfo.Name.Substring(
-                subFileInfo.Name.Substring(subFileInfo.Name.Length - 15 >= 0 ? subFileInfo.Name.Length - 15 : 0)
-                    .IndexOf(".", StringComparison.Ordinal) +
-                (subFileInfo.Name.Length - 15 >= 0 ? subFileInfo.Name.Length - 15 : 0));
+
+            var extension = subtitleFileExtension;
+            if (string.IsNullOrWhiteSpace(extension))
+            {
+                extension = subFileInfo.Name.Substring(
+                    subFileInfo.Name.Substring(subFileInfo.Name.Length - 15 >= 0 ? subFileInfo.Name.Length - 15 : 0)
+                        .IndexOf(".", StringComparison.Ordinal) +
+                    (subFileInfo.Name.Length - 15 >= 0 ? subFileInfo.Name.Length - 15 : 0));
+            }
+
+            if (!extension.StartsWith("."))
+            {
+                extension = "." + extension;
+            }
+
             if (copyToMovieLocation)
             {
                 if (MovieFile.Directory != null)
@@ -110,12 +121,12 @@ namespace SubRenamer
             }
         }
 
-        public virtual void GenerateRenameSubFiles(bool copyToMovieLocation = false)
+        public virtual void GenerateRenameSubFiles(bool copyToMovieLocation = false, string subtitleFileExtension = null)
         {
             RenamedSubFiles.Clear();
             for (var i = 0; i < SubFiles.Count; i++)
             {
-                GenerateRenameSubFiles(i, copyToMovieLocation);
+                GenerateRenameSubFiles(i, copyToMovieLocation, subtitleFileExtension);
             }
         }
 
