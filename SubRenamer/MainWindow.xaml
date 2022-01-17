@@ -18,6 +18,7 @@
             <WrapPanel Margin="0,5" HorizontalAlignment="Left">
                 <CheckBox Content="复制字幕到视频目录" Margin="10,0" IsChecked="{Binding CopySub, Mode=TwoWay}"/>
                 <CheckBox Content="使用sushi自动调轴" Margin="10,0" IsChecked="{Binding EatSushi, Mode=TwoWay}"/>
+                <TextBox Margin="10,0" Text="{Binding SubtitleFileExtension, Mode=TwoWay}" controls:TextBoxHelper.Watermark="自定义字幕扩展名" Width="200"/>
             </WrapPanel>
             <WrapPanel Margin="0,5" HorizontalAlignment="Left">
                 <WrapPanel.Resources>

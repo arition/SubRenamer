@@ -23,8 +23,19 @@ namespace SubRenamer
         public ModelList ModelList { get; } = new ModelList();
         private bool _eatSushi;
         private bool _copySub;
+        private string _subtitleFileExtension;
         private Logger Logger { get; } = LogManager.GetCurrentClassLogger();
         private Logger SushiLogger { get; } = LogManager.GetLogger("Sushi");
+
+        public string SubtitleFileExtension
+        {
+            get => _subtitleFileExtension;
+            set
+            {
+                _subtitleFileExtension = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool CopySub
         {
@@ -118,7 +129,7 @@ namespace SubRenamer
                 var model = ModelList.Models[i];
                 try
                 {
-                    model.GenerateRenameSubFiles(CopySub);
+                    model.GenerateRenameSubFiles(CopySub, SubtitleFileExtension);
                     for (var j = 0; j < model.SubFiles.Count; j++)
                     {
                         if (!EatSushi)
