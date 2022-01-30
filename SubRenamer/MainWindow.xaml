@@ -9,7 +9,7 @@
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
         WindowStartupLocation="CenterScreen"
-        Title="SubRenamer" Height="450" Width="725" FontFamily="{DynamicResource DefaultFont}">
+        Title="SubRenamer" Height="600" Width="1100" FontFamily="{DynamicResource DefaultFont}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
@@ -18,7 +18,7 @@
             <WrapPanel Margin="0,5" HorizontalAlignment="Left">
                 <CheckBox Content="复制字幕到视频目录" Margin="10,0" IsChecked="{Binding CopySub, Mode=TwoWay}"/>
                 <CheckBox Content="使用sushi自动调轴" Margin="10,0" IsChecked="{Binding EatSushi, Mode=TwoWay}"/>
-                <TextBox Margin="10,0" Text="{Binding SubtitleFileExtension, Mode=TwoWay}" controls:TextBoxHelper.Watermark="自定义字幕扩展名" Width="200"/>
+                <TextBox Margin="10,0" Text="{Binding SubtitleFileExtension, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" controls:TextBoxHelper.Watermark="自定义字幕扩展名" Width="200"/>
             </WrapPanel>
             <WrapPanel Margin="0,5" HorizontalAlignment="Left">
                 <WrapPanel.Resources>
@@ -38,10 +38,10 @@
         <ListView x:Name="ListInfo" ItemsSource="{Binding Path=ModelList.Models}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Visible" AllowDrop="True" Drop="ListInfo_OnDrop">
             <ListView.View>
                 <GridView x:Name="GridView">
-                    <GridViewColumn Header="原视频文件名" Width="220" DisplayMemberBinding="{Binding OriginalMovieFileName}"/>
-                    <GridViewColumn Header="视频文件名" Width="220" DisplayMemberBinding="{Binding MovieFileName}"/>
-                    <GridViewColumn Header="字幕文件名" Width="220" DisplayMemberBinding="{Binding SubFileName}"/>
-                    <GridViewColumn Header="最终文件名" Width="220" DisplayMemberBinding="{Binding RenamedSubFileName}"/>
+                    <GridViewColumn Header="原视频文件名" Width="350" DisplayMemberBinding="{Binding OriginalMovieFileName}"/>
+                    <GridViewColumn Header="视频文件名" Width="350" DisplayMemberBinding="{Binding MovieFileName}"/>
+                    <GridViewColumn Header="字幕文件名" Width="350" DisplayMemberBinding="{Binding SubFileName}"/>
+                    <GridViewColumn Header="最终文件名" Width="350" DisplayMemberBinding="{Binding RenamedSubFileName}"/>
                 </GridView>
             </ListView.View>
         </ListView>
