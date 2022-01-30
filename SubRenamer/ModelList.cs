@@ -6,9 +6,22 @@ using System.Linq;
 
 namespace SubRenamer
 {
-    public class ModelList 
+    public class ModelList
     {
-        public ObservableCollection<Model> Models { get; } = new ObservableCollection<Model>();
+        private string _subtitleFileExtension;
+
+        public ObservableCollection<Model> Models { get; } = new();
+
+        public string SubtitleFileExtension
+        {
+            get => _subtitleFileExtension;
+            set
+            {
+                foreach (var model in Models) model.SubtitleFileExtension = value;
+
+                _subtitleFileExtension = value;
+            }
+        }
 
         public void AddOriginalMovie(IEnumerable<string> files)
         {
@@ -20,15 +33,16 @@ namespace SubRenamer
                 {
                     Models.Add(new Model
                     {
-                        OriginalMovieFile = new FileInfo(selectFileFileName)
+                        OriginalMovieFile = new FileInfo(selectFileFileName),
+                        SubtitleFileExtension = SubtitleFileExtension
                     });
                 }
                 else
-                {
                     Models[i].OriginalMovieFile = new FileInfo(selectFileFileName);
-                }
+
                 i++;
             }
+
             while (i < Models.Count) Models.RemoveAt(i);
         }
 
@@ -42,15 +56,16 @@ namespace SubRenamer
                 {
                     Models.Add(new Model
                     {
-                        MovieFile = new FileInfo(selectFileFileName)
+                        MovieFile = new FileInfo(selectFileFileName),
+                        SubtitleFileExtension = SubtitleFileExtension
                     });
                 }
                 else
-                {
                     Models[i].MovieFile = new FileInfo(selectFileFileName);
-                }
+
                 i++;
             }
+
             while (i < Models.Count) Models.RemoveAt(i);
         }
 
@@ -77,23 +92,21 @@ namespace SubRenamer
                 if (lastSubNameOnly != selectFileFileName.nameOnly)
                 {
                     i++;
-                    if (i < Models.Count)
-                    {
-                        Models[i].SubFiles.Clear();
-                    }
+                    if (i < Models.Count) Models[i].SubFiles.Clear();
                 }
+
                 if (i == Models.Count)
                 {
-                    var model = new Model();
+                    var model = new Model { SubtitleFileExtension = SubtitleFileExtension };
                     model.SubFiles.Add(selectFileFileName.file);
                     Models.Add(model);
                 }
                 else
-                {
                     Models[i].SubFiles.Add(selectFileFileName.file);
-                }
+
                 lastSubNameOnly = selectFileFileName.nameOnly;
             }
+
             i++;
             while (i < Models.Count) Models.RemoveAt(i);
         }
@@ -112,17 +125,11 @@ namespace SubRenamer
                     case ".mkv":
                     case ".m2ts":
                         if (!eatSushi || movieList.Count == 0)
-                        {
                             movieList.Add(file);
-                        }
                         else if (Utils.TestSimilarity(new FileInfo(movieList[0]).Name, new FileInfo(file).Name) > 30)
-                        {
                             movieList.Add(file);
-                        }
                         else
-                        {
                             originalMovieList.Add(file);
-                        }
                         break;
                     case ".ass":
                     case ".ssa":
@@ -131,6 +138,7 @@ namespace SubRenamer
                         break;
                 }
             }
+
             if (subList.Count > 0) AddSub(subList);
             if (eatSushi)
             {
@@ -140,13 +148,12 @@ namespace SubRenamer
                     {
                         if (Utils.TestSimilarity(Models[0].SubFiles[0].Name, new FileInfo(movieList[0]).Name) > 30)
                         {
-                            var tempList = movieList;
-                            movieList = originalMovieList;
-                            originalMovieList = tempList;
+                            (movieList, originalMovieList) = (originalMovieList, movieList);
                         }
                     }
                 }
             }
+
             if (originalMovieList.Count > 0) AddOriginalMovie(originalMovieList);
             if (movieList.Count > 0) AddMovie(movieList);
         }

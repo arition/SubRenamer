@@ -15,15 +15,24 @@ using SubRenamer.Annotations;
 namespace SubRenamer
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    ///     MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : INotifyPropertyChanged
     {
-        private GridViewColumn Column { get; }
-        public ModelList ModelList { get; } = new ModelList();
-        private bool _eatSushi;
         private bool _copySub;
+        private bool _eatSushi;
         private string _subtitleFileExtension;
+
+        public MainWindow()
+        {
+            DataContext = this;
+            InitializeComponent();
+            Column = GridView.Columns[0];
+            GridView.Columns.RemoveAt(0);
+        }
+
+        private GridViewColumn Column { get; }
+        public ModelList ModelList { get; } = new();
         private Logger Logger { get; } = LogManager.GetCurrentClassLogger();
         private Logger SushiLogger { get; } = LogManager.GetLogger("Sushi");
 
@@ -32,6 +41,7 @@ namespace SubRenamer
             get => _subtitleFileExtension;
             set
             {
+                ModelList.SubtitleFileExtension = value;
                 _subtitleFileExtension = value;
                 OnPropertyChanged();
             }
@@ -54,24 +64,14 @@ namespace SubRenamer
             {
                 _eatSushi = value;
                 if (_eatSushi)
-                {
                     GridView.Columns.Insert(0, Column);
-                }
                 else
-                {
                     GridView.Columns.RemoveAt(0);
-                }
                 OnPropertyChanged();
             }
         }
 
-        public MainWindow()
-        {
-            DataContext = this;
-            InitializeComponent();
-            Column = GridView.Columns[0];
-            GridView.Columns.RemoveAt(0);
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void BtnSelectOriginalMovie_OnClick(object sender, RoutedEventArgs e)
         {
@@ -80,10 +80,7 @@ namespace SubRenamer
                 Multiselect = true,
                 Filter = "视频文件(*.mp4;*.mkv;*.m2ts)|*.mp4;*.mkv;*.m2ts|所有文件 (*.*)|*.*"
             };
-            if (selectFile.ShowDialog() == true)
-            {
-                ModelList.AddOriginalMovie(selectFile.FileNames);
-            }
+            if (selectFile.ShowDialog() == true) ModelList.AddOriginalMovie(selectFile.FileNames);
         }
 
         private void BtnSelectMovie_OnClick(object sender, RoutedEventArgs e)
@@ -93,10 +90,7 @@ namespace SubRenamer
                 Multiselect = true,
                 Filter = "视频文件(*.mp4;*.mkv;*.m2ts)|*.mp4;*.mkv;*.m2ts|所有文件 (*.*)|*.*"
             };
-            if (selectFile.ShowDialog() == true)
-            {
-                ModelList.AddMovie(selectFile.FileNames);
-            }
+            if (selectFile.ShowDialog() == true) ModelList.AddMovie(selectFile.FileNames);
         }
 
         private void BtnSelectSub_OnClick(object sender, RoutedEventArgs e)
@@ -106,10 +100,7 @@ namespace SubRenamer
                 Multiselect = true,
                 Filter = "字幕文件(*.ass;*.ssa;*.srt)|*.ass;*.ssa;*.srt|所有文件 (*.*)|*.*"
             };
-            if (selectFile.ShowDialog() == true)
-            {
-                ModelList.AddSub(selectFile.FileNames);
-            }
+            if (selectFile.ShowDialog() == true) ModelList.AddSub(selectFile.FileNames);
         }
 
         private async void BtnRename_OnClick(object sender, RoutedEventArgs e)
@@ -121,6 +112,7 @@ namespace SubRenamer
                 controller.Minimum = 0;
                 controller.Maximum = 1;
             }
+
             var sb = new StringBuilder();
             for (var i = 0; i < ModelList.Models.Count; i++)
             {
@@ -129,7 +121,7 @@ namespace SubRenamer
                 var model = ModelList.Models[i];
                 try
                 {
-                    model.GenerateRenameSubFiles(CopySub, SubtitleFileExtension);
+                    model.GenerateRenameSubFiles(CopySub);
                     for (var j = 0; j < model.SubFiles.Count; j++)
                     {
                         if (!EatSushi)
@@ -167,19 +159,17 @@ namespace SubRenamer
                     sb.AppendLine($"第{i + 1}个字幕出现错误：{ex.Message}");
                     Logger.Error(ex, $"第{i + 1}个字幕出现错误");
                 }
-                if (EatSushi) controller?.SetProgress((i + 1d)/ModelList.Models.Count);
+
+                if (EatSushi) controller?.SetProgress((i + 1d) / ModelList.Models.Count);
             }
+
             if (EatSushi && controller != null) await controller.CloseAsync();
             Logger.Info("重命名完成");
             var message = sb.ToString();
             if (string.IsNullOrWhiteSpace(message))
-            {
                 await this.ShowMessageAsync("成功", "重命名成功");
-            }
             else
-            {
                 await this.ShowMessageAsync("错误", message);
-            }
             ModelList.Models.Clear();
         }
 
@@ -193,8 +183,6 @@ namespace SubRenamer
             if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
                 ModelList.AddDropFiles(files, EatSushi);
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
