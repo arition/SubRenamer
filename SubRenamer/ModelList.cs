@@ -134,6 +134,8 @@ namespace SubRenamer
                     case ".ass":
                     case ".ssa":
                     case ".srt":
+                    case ".sub":
+                    case ".idx":
                         subList.Add(file);
                         break;
                 }

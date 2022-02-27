@@ -98,7 +98,7 @@ namespace SubRenamer
             var selectFile = new OpenFileDialog
             {
                 Multiselect = true,
-                Filter = "字幕文件(*.ass;*.ssa;*.srt)|*.ass;*.ssa;*.srt|所有文件 (*.*)|*.*"
+                Filter = "字幕文件(*.ass;*.ssa;*.srt;*.sub;*.idx)|*.ass;*.ssa;*.srt;*.sub;*.idx|所有文件 (*.*)|*.*"
             };
             if (selectFile.ShowDialog() == true) ModelList.AddSub(selectFile.FileNames);
         }
