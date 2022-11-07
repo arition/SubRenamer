@@ -122,6 +122,7 @@ namespace SubRenamer
                 switch (extension)
                 {
                     case ".mp4":
+                    case ".m4v":
                     case ".mkv":
                     case ".m2ts":
                         if (!eatSushi || movieList.Count == 0)
