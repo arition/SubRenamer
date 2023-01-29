@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using ControlzEx.Theming;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using NLog;
@@ -29,12 +30,22 @@ namespace SubRenamer
             InitializeComponent();
             Column = GridView.Columns[0];
             GridView.Columns.RemoveAt(0);
+
+            if (OperatingSystem.IsWindows())
+            {
+                Theme.OnWindowsThemeChanged += ((sender, theme) =>
+                    Dispatcher.Invoke(() =>
+                        ThemeManager.Current.ChangeTheme(this,
+                            theme == WindowsTheme.Theme.Light ? "Light.Steel" : "Dark.Steel")));
+                Theme.WatchTheme();
+            }
         }
 
         private GridViewColumn Column { get; }
         public ModelList ModelList { get; } = new();
         private Logger Logger { get; } = LogManager.GetCurrentClassLogger();
         private Logger SushiLogger { get; } = LogManager.GetLogger("Sushi");
+        private WindowsTheme Theme { get; } = new();
 
         public string SubtitleFileExtension
         {
