@@ -89,7 +89,7 @@ namespace SubRenamer
             var selectFile = new OpenFileDialog
             {
                 Multiselect = true,
-                Filter = "视频文件(*.mp4;*.m4v;*.mkv;*.m2ts)|*.mp4;*.m4v;*.mkv;*.m2ts|所有文件 (*.*)|*.*"
+                Filter = "视频文件(*.mp4;*.m4v;*.mkv;*.m2ts;*.webm)|*.mp4;*.m4v;*.mkv;*.m2ts;*.webm|所有文件 (*.*)|*.*"
             };
             if (selectFile.ShowDialog() == true) ModelList.AddOriginalMovie(selectFile.FileNames);
         }
@@ -99,7 +99,7 @@ namespace SubRenamer
             var selectFile = new OpenFileDialog
             {
                 Multiselect = true,
-                Filter = "视频文件(*.mp4;*.m4v;*.mkv;*.m2ts)|*.mp4;*.m4v;*.mkv;*.m2ts|所有文件 (*.*)|*.*"
+                Filter = "视频文件(*.mp4;*.m4v;*.mkv;*.m2ts;*.webm)|*.mp4;*.m4v;*.mkv;*.m2ts;*.webm|所有文件 (*.*)|*.*"
             };
             if (selectFile.ShowDialog() == true) ModelList.AddMovie(selectFile.FileNames);
         }

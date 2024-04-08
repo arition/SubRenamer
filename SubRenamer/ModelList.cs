@@ -125,6 +125,7 @@ namespace SubRenamer
                     case ".m4v":
                     case ".mkv":
                     case ".m2ts":
+                    case ".webm":
                         if (!eatSushi || movieList.Count == 0)
                             movieList.Add(file);
                         else if (Utils.TestSimilarity(new FileInfo(movieList[0]).Name, new FileInfo(file).Name) > 30)
