@@ -9,7 +9,8 @@
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
         WindowStartupLocation="CenterScreen"
-        Title="SubRenamer" Height="600" Width="1100" FontFamily="{DynamicResource DefaultFont}">
+        Title="SubRenamer" Height="700" Width="1400" FontFamily="{DynamicResource DefaultFont}"
+        >
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
@@ -41,7 +42,7 @@
                     <GridViewColumn Header="原视频文件名" Width="350" DisplayMemberBinding="{Binding OriginalMovieFileName}"/>
                     <GridViewColumn Header="视频文件名" Width="350" DisplayMemberBinding="{Binding MovieFileName}"/>
                     <GridViewColumn Header="字幕文件名" Width="350" DisplayMemberBinding="{Binding SubFileName}"/>
-                    <GridViewColumn Header="最终文件名" Width="350" DisplayMemberBinding="{Binding RenamedSubFileName}"/>
+                    <GridViewColumn Header="最终文件名" Width="700" DisplayMemberBinding="{Binding RenamedSubFileName}"/>
                 </GridView>
             </ListView.View>
         </ListView>
