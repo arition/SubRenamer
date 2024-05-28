@@ -124,7 +124,7 @@ public partial class MainWindow : INotifyPropertyChanged
         ProgressDialogController controller = null;
         if (EatSushi)
         {
-            controller = await this.ShowProgressAsync("正在处理", "正在处理第1个字幕");
+            controller = await this.ShowProgressAsync(Properties.Resources.正在处理, "正在处理第1个字幕");
             controller.Minimum = 0;
             controller.Maximum = 1;
         }
@@ -178,12 +178,12 @@ public partial class MainWindow : INotifyPropertyChanged
         }
 
         if (EatSushi && controller != null) await controller.CloseAsync();
-        Logger.Info("重命名完成");
+        Logger.Info(Properties.Resources.重命名完成);
         var message = sb.ToString();
         if (string.IsNullOrWhiteSpace(message))
-            await this.ShowMessageAsync("成功", "重命名成功");
+            await this.ShowMessageAsync(Properties.Resources.成功, Properties.Resources.重命名成功);
         else
-            await this.ShowMessageAsync("错误", message);
+            await this.ShowMessageAsync(Properties.Resources.错误, message);
         ModelList.Models.Clear();
     }
 

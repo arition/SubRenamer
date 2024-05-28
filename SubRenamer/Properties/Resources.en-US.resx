@@ -118,54 +118,54 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="使用sushi自动调轴" xml:space="preserve">
-    <value>使用sushi自动调轴</value>
+    <value>Use sushi</value>
   </data>
   <data name="原视频文件名" xml:space="preserve">
-    <value>原视频文件名</value>
+    <value>Original video file name</value>
   </data>
   <data name="复制字幕到视频目录" xml:space="preserve">
-    <value>复制字幕到视频目录</value>
+    <value>Copy subtitle to video directory</value>
   </data>
   <data name="字幕文件名" xml:space="preserve">
-    <value>字幕文件名</value>
+    <value>Subtitle file name</value>
   </data>
   <data name="成功" xml:space="preserve">
-    <value>成功</value>
+    <value>Success</value>
   </data>
   <data name="执行重命名" xml:space="preserve">
-    <value>执行重命名</value>
+    <value>Execute renaming</value>
   </data>
   <data name="最终文件名" xml:space="preserve">
-    <value>最终文件名</value>
+    <value>Final file name</value>
   </data>
   <data name="正在处理" xml:space="preserve">
-    <value>正在处理</value>
+    <value>Processing</value>
   </data>
   <data name="清空列表" xml:space="preserve">
-    <value>清空列表</value>
+    <value>Clear list</value>
   </data>
   <data name="自定义字幕扩展名" xml:space="preserve">
-    <value>自定义字幕扩展名</value>
+    <value>Customize subtitle extension</value>
   </data>
   <data name="视频文件名" xml:space="preserve">
-    <value>视频文件名</value>
+    <value>Video file name</value>
   </data>
   <data name="选择原视频" xml:space="preserve">
-    <value>选择原视频</value>
+    <value>Select Original Videos</value>
   </data>
   <data name="选择字幕" xml:space="preserve">
-    <value>选择字幕</value>
+    <value>Select Subtitles</value>
   </data>
   <data name="选择视频" xml:space="preserve">
-    <value>选择视频</value>
+    <value>Select Videos</value>
   </data>
   <data name="重命名完成" xml:space="preserve">
-    <value>重命名完成</value>
+    <value>Renaming completed</value>
   </data>
   <data name="重命名成功" xml:space="preserve">
-    <value>重命名成功</value>
+    <value>Renaming Success</value>
   </data>
   <data name="错误" xml:space="preserve">
-    <value>错误</value>
+    <value>Error</value>
   </data>
 </root>
