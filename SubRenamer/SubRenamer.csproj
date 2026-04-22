@@ -16,7 +16,7 @@
     <Resource Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NLog" Version="5.2.7" />
+    <PackageReference Include="NLog" Version="6.1.2" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="6.2.0" />
     <PackageReference Include="System.ServiceModel.Federation" Version="6.2.0" />
