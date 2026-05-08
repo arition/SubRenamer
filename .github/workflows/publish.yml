@@ -26,10 +26,10 @@ jobs:
 
     - name: Publish
       run: |
-        dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-x64-with-runtime --self-contained true
-        dotnet publish -c Release -r win-arm64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-arm64-with-runtime --self-contained true
-        dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-x64 --self-contained false
-        dotnet publish -c Release -r win-arm64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-arm64 --self-contained false
+        dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-x64 --no-self-contained
+        dotnet publish -c Release -r win-arm64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-arm64 --no-self-contained
+        dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-x64-with-runtime --self-contained
+        dotnet publish -c Release -r win-arm64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-arm64-with-runtime --self-contained
       working-directory: ./SubRenamer
 
     - name: Compress Build Artifact
