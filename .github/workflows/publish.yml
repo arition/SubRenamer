@@ -11,40 +11,40 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
-    - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@v7.0.1
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v6.0.0
-      with:
-        dotnet-version: 8.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 10.x
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Build
-      run: dotnet build
+      - name: Build
+        run: dotnet build
 
-    - name: Publish
-      run: |
-        dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-x64 --no-self-contained
-        dotnet publish -c Release -r win-arm64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-arm64 --no-self-contained
-        dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-x64-with-runtime --self-contained
-        dotnet publish -c Release -r win-arm64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-arm64-with-runtime --self-contained
-      working-directory: ./SubRenamer
+      - name: Publish
+        run: |
+          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-x64 --no-self-contained
+          dotnet publish -c Release -r win-arm64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-arm64 --no-self-contained
+          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-x64-with-runtime --self-contained
+          dotnet publish -c Release -r win-arm64 -p:PublishSingleFile=true -p:PublishDir=.\artifacts\win-arm64-with-runtime --self-contained
+        working-directory: ./SubRenamer
 
-    - name: Compress Build Artifact
-      run: |
-        Compress-Archive -Path .\SubRenamer\artifacts\win-x64-with-runtime\* -DestinationPath .\SubRenamer-with-runtime-win-x64.zip
-        Compress-Archive -Path .\SubRenamer\artifacts\win-arm64-with-runtime\* -DestinationPath .\SubRenamer-with-runtime-win-arm64.zip
-        Compress-Archive -Path .\SubRenamer\artifacts\win-x64\* -DestinationPath .\SubRenamer-win-x64.zip
-        Compress-Archive -Path .\SubRenamer\artifacts\win-arm64\* -DestinationPath .\SubRenamer-win-arm64.zip
-        Get-FileHash -Path .\SubRenamer*.zip | Format-List > sha256sum.txt
+      - name: Compress Build Artifact
+        run: |
+          Compress-Archive -Path .\SubRenamer\artifacts\win-x64-with-runtime\* -DestinationPath .\SubRenamer-with-runtime-win-x64.zip
+          Compress-Archive -Path .\SubRenamer\artifacts\win-arm64-with-runtime\* -DestinationPath .\SubRenamer-with-runtime-win-arm64.zip
+          Compress-Archive -Path .\SubRenamer\artifacts\win-x64\* -DestinationPath .\SubRenamer-win-x64.zip
+          Compress-Archive -Path .\SubRenamer\artifacts\win-arm64\* -DestinationPath .\SubRenamer-win-arm64.zip
+          Get-FileHash -Path .\SubRenamer*.zip | Format-List > sha256sum.txt
 
-    - name: Release
-      uses: softprops/action-gh-release@v3
-      with:
-        files: |
-          SubRenamer*.zip
-          sha256sum.txt
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            SubRenamer*.zip
+            sha256sum.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

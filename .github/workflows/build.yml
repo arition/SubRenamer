@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
 
 jobs:
@@ -11,25 +11,25 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
-    - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@v7.0.1
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v6.0.0
-      with:
-        dotnet-version: 8.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 10.x
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Build
-      run: dotnet build
+      - name: Build
+        run: dotnet build
 
-    - name: Publish
-      run: dotnet publish -c Release
-      working-directory: ./SubRenamer
+      - name: Publish
+        run: dotnet publish -c Release
+        working-directory: ./SubRenamer
 
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v7.0.1
-      with:
-        name: SubRenamer
-        path: ./SubRenamer/bin/Release/net8.0-windows/publish
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: SubRenamer
+          path: ./SubRenamer/bin/Release/net10.0-windows/publish
