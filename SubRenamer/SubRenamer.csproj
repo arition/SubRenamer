@@ -19,7 +19,7 @@
     <PackageReference Include="NLog" Version="6.1.4" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="10.0.652802" />
-    <PackageReference Include="System.ServiceModel.Federation" Version="10.0.652802" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="10.1.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.11" />
     <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="6.2.1" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.11" />
